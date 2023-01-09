@@ -1,5 +1,6 @@
 package com.emlakcepte.service;
 
+import com.emlakcepte.client.PaymentServiceClient;
 import com.emlakcepte.configuration.EmlakcepteEmailQueue;
 import com.emlakcepte.configuration.EmlakcepteInvoiceQueue;
 import com.emlakcepte.configuration.RabbitMQConfiguration;
@@ -7,7 +8,10 @@ import com.emlakcepte.controller.UserController;
 import com.emlakcepte.converter.UserConverter;
 import com.emlakcepte.dao.InvoiceRepository;
 import com.emlakcepte.dao.UserRepository;
+import com.emlakcepte.dao.UsersAndProductsRepository;
 import com.emlakcepte.model.Invoice;
+import com.emlakcepte.model.ProductAndUserId;
+import com.emlakcepte.model.RealtyProduct;
 import com.emlakcepte.model.User;
 import com.emlakcepte.request.PaymentRequest;
 import com.emlakcepte.request.UserRequest;
@@ -15,6 +19,7 @@ import com.emlakcepte.response.UserResponse;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -34,10 +39,15 @@ public class UserService {
     private EmlakcepteInvoiceQueue emlakcepteInvoiceQueue;
     @Autowired
     private UserConverter converter;
+    @Autowired
+    private PaymentServiceClient paymentServiceClient;
 
     @Autowired
     private InvoiceRepository invoiceRepository;
+    @Autowired
+    private UsersAndProductsRepository usersAndProductsRepository;
 
+    //user oluşturur.
     public UserResponse createUser(UserRequest userRequest) {
 
         User savedUser = userRepository.save(converter.convert(userRequest));
@@ -53,22 +63,13 @@ public class UserService {
 
         return converter.convert(savedUser);
     }
-    //TODO update password
 
+    //Tüm userları listeler
     public List<UserResponse> getAll() {
         return converter.convert(userRepository.findAll());
     }
 
-    public User getByEmailUnitPattern(String email) {
-
-
-        return userRepository.findAll()
-                .stream()
-                .filter(obj -> obj.getMail().equals(email))
-                .findFirst()
-                .get();
-    }
-
+    //Email e göre kullanıcıyı getirir.
     public UserResponse getByEmail(String email) {
         return converter.convert(userRepository.findByMail(email));
     }
@@ -77,16 +78,18 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public Boolean payment(PaymentRequest paymentRequest) {
-        //Bankadan onay alıyoruz.
-        return true;
+    public Invoice payment(PaymentRequest paymentRequest) {
+        System.out.println("Invoice :: " + paymentRequest.toString());
+        //usersAndProductsRepository.save(converter.convertRealtyProduct(paymentRequest));
+        return paymentServiceClient.payment(paymentRequest);
+
     }
 
     protected void createInvoice(PaymentRequest paymentRequest) {
         Logger logger = Logger.getLogger(UserService.class.getName());
         /*kuyruğa atar. henüz database'e kayıt yapılmadı notification servise bu işlemi kuyruktan okuyarak
          yapacak.**/
-        System.out.println(emlakcepteInvoiceQueue.getQueueName()+"------");
+        System.out.println(emlakcepteInvoiceQueue.getQueueName() + "------");
         rabbitTemplate.convertAndSend(emlakcepteInvoiceQueue.getQueueName(), paymentRequest);
         logger.log(Level.INFO, "[invoice] fatura kuyruğa eklendi");
     }
@@ -96,29 +99,9 @@ public class UserService {
     }
 
 
+    public List<RealtyProduct> getProductByUser(ProductAndUserId productAndUserId) {
+        return usersAndProductsRepository.findAllById(Collections.singleton(productAndUserId));
+    }
 }
 
-/**
- <dependency>
- <groupId>org.springframework.cloud</groupId>
- <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
- <version>3.1.4</version>
- <exclusions>
- <exclusion>
- <groupId>org.springframework.cloud</groupId>
- <artifactId>spring-cloud-starter-ribbon</artifactId>
- </exclusion>
- <exclusion>
- <groupId>com.netflix.ribbon</groupId>
- <artifactId>ribbon-eureka</artifactId>
- </exclusion>
- </exclusions>
- </dependency>
-
- <dependency>
- <groupId>org.springframework.cloud</groupId>
- <artifactId>spring-cloud-starter-loadbalancer</artifactId>
- <version>3.1.4</version>
- </dependency>
- */
 

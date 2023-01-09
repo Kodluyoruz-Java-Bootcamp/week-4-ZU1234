@@ -3,7 +3,7 @@ package com.emlakcepte.request;
 import com.emlakcepte.enums.RealtyType;
 
 public class RealtyRequest {
-    private  Integer no;
+    private Integer no;
     private String title;
     private String province;
     private Integer userId;

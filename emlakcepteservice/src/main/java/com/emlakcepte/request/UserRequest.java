@@ -4,12 +4,10 @@ import com.emlakcepte.enums.UserType;
 
 public class UserRequest {
 
-
     private String name;
     private String mail;
     private String password;
     private UserType type;
-
 
     public String getName() {
         return name;

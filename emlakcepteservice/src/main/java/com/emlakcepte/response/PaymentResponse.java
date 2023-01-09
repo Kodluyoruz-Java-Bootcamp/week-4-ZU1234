@@ -12,7 +12,7 @@ public class PaymentResponse {
     private Integer piece;
 
     public PaymentResponse() {
-    super();
+        super();
     }
 
     public PaymentResponse(Integer userId, Integer price, ProductType productType, Integer piece) {
@@ -52,5 +52,15 @@ public class PaymentResponse {
 
     public void setPiece(Integer piece) {
         this.piece = piece;
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentResponse{" +
+                "userId=" + userId +
+                ", price=" + price +
+                ", productType=" + productType +
+                ", piece=" + piece +
+                '}';
     }
 }

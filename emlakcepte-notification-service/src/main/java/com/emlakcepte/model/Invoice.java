@@ -1,6 +1,8 @@
 package com.emlakcepte.model;
 
-import jakarta.persistence.*;
+import com.emlakcepte.enums.ProductType;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "invoices")
@@ -14,16 +16,17 @@ public class Invoice {
     @Column(name = "price")
     private int price;
     @Column(name = "product")
-    //TODO product düzenle
-    private String product;
-    public Invoice(){
+    private ProductType productType;
+
+    public Invoice() {
         super();
     }
-    public Invoice(int id, int userId, int price, String product) {
+
+    public Invoice(int id, int userId, int price, ProductType productType) {
         this.id = id;
         this.userId = userId;
         this.price = price;
-        this.product = product;
+        this.productType = productType;
     }
 
 
@@ -51,11 +54,11 @@ public class Invoice {
         this.price = price;
     }
 
-    public String getProduct() {
-        return product;
+    public ProductType getProductType() {
+        return productType;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
     }
 }

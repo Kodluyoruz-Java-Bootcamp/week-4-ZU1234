@@ -23,11 +23,13 @@ public class RealtyController {
     @Autowired
     private RealtyConverter converter;
 
+    //Tüm ilanları getirir.
     @GetMapping
     public ResponseEntity<List<RealtyResponse>> getAll() {
         return ResponseEntity.ok(realtyService.getAll());
     }
 
+    //ilan oluşturur.
     @PostMapping
     public ResponseEntity<RealtyResponse> create(@RequestBody RealtyRequest realtyRequest) {
         Logger logger = Logger.getLogger(RealtyController.class.getName());
@@ -36,6 +38,7 @@ public class RealtyController {
         return ResponseEntity.ok(realtyResponse);
     }
 
+    //Kullanıcıya ait ilanları listeler
     @GetMapping(value = "/{id}")
     public ResponseEntity<List<RealtyResponse>> getAllByUserId(@PathVariable int userId) {
         List<RealtyResponse> realtyes = realtyService.findAllByUserId(userId);
@@ -49,11 +52,6 @@ public class RealtyController {
         List<RealtyResponse> realtyResponses = realtyService.getAllByStatus(realtyType);
         return ResponseEntity.ok(realtyResponses);
     }
-  /*  @GetMapping(value = "/active/{userId}")
-    public ResponseEntity<List<RealtyResponse>> getAllActiveRealtyesByUser(@PathVariable int userId) {
-        List<RealtyResponse> realtyResponses = realtyService.getAllActiveRealtyesByUser(userId);
-        return ResponseEntity.ok(realtyResponses);
-    }*/
 
     //ilan silme işlemi yapar database üzerindende siler. ilan no ile gerçekleştirilir.
     @DeleteMapping(value = "/{id}")

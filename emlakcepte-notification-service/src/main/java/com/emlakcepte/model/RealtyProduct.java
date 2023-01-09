@@ -1,18 +1,18 @@
 package com.emlakcepte.model;
 
 import com.emlakcepte.enums.ProductType;
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 @Entity
+@IdClass(ProductAndUserId.class)
 @Table(name = "users_and_products")
 public class RealtyProduct {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
-    private Integer id;
     @Column(name = "user_id")
     private Integer userId;
-    @Enumerated(value = EnumType.ORDINAL)
+    @Id
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "productType")
     private ProductType productType;
     @Column(name = "packageEndDate")
@@ -22,20 +22,13 @@ public class RealtyProduct {
         super();
     }
 
-    public RealtyProduct(Integer id, Integer userId, ProductType productType, String packageEndDate) {
-        this.id = id;
+    public RealtyProduct(Integer userId, ProductType productType, String packageEndDate) {
+
         this.userId = userId;
         this.productType = productType;
         this.packageEndDate = packageEndDate;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getUserId() {
         return userId;
@@ -59,5 +52,14 @@ public class RealtyProduct {
 
     public void setPackageEndDate(String packageEndDate) {
         this.packageEndDate = packageEndDate;
+    }
+
+    @Override
+    public String toString() {
+        return "RealtyProduct{" +
+                "userId=" + userId +
+                ", productType=" + productType +
+                ", packageEndDate='" + packageEndDate + '\'' +
+                '}';
     }
 }

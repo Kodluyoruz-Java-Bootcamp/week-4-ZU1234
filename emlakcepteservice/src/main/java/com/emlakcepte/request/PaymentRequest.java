@@ -4,7 +4,7 @@ import com.emlakcepte.enums.ProductType;
 
 public class PaymentRequest {
 
-     private String cardNo;
+    private String cardNo;
     private Integer userId;  // kart sahibi
     private Integer cvv;
     private Integer price;
@@ -64,11 +64,24 @@ public class PaymentRequest {
         this.piece = piece;
     }
 
-    public ProductType getProduct() {
+
+    public ProductType getProductType() {
         return productType;
     }
 
-    public void setProduct(ProductType productType) {
+    public void setProductType(ProductType productType) {
         this.productType = productType;
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentRequest{" +
+                "cardNo='" + cardNo + '\'' +
+                ", userId=" + userId +
+                ", cvv=" + cvv +
+                ", price=" + price +
+                ", piece=" + piece +
+                ", productType=" + productType +
+                '}';
     }
 }

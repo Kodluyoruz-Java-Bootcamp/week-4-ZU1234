@@ -13,10 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfiguration {
 
-    // @Value("${rabbitmq.queue}")
+
     private String queueName = "emlakcepte.notification";
 
-    //@Value("${rabbitmq.exchange}")
     private String exchange = "emlakcepte.notification";
 
     @Value("${rabbitmq.routingkey}")
@@ -41,15 +40,6 @@ public class RabbitMQConfiguration {
     public Jackson2JsonMessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
-/*
-   @Bean
-    public AmqpTemplate rabbitTemplate(ConnectionFactory connectionFactory){
-        final RabbitTemplate rabbitTemplate =new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jsonMessageConverter());
-        return rabbitTemplate;
-    }
-**/
-
     public String getQueueName() {
         return queueName;
     }

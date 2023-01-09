@@ -7,7 +7,6 @@ import com.emlakcepte.model.User;
 import com.emlakcepte.repository.InvoiceRepository;
 import com.emlakcepte.repository.RealtyRepository;
 import com.emlakcepte.repository.UsersAndProductsRepository;
-import com.emlakcepte.request.PaymentRequest;
 import com.emlakcepte.request.RealtyStatusUpdateRequest;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,8 @@ public class NotificationListener {
 
 
     @RabbitListener(queues = "emlakcepte.notification.usersAndProducts")
-    public void isPayment(RealtyProduct realtyProduct) {
+    public void payment(RealtyProduct realtyProduct) {
         usersAndProductsRepository.save(realtyProduct);
-
     }
 
     @RabbitListener(queues = "emlakcepte.notification")

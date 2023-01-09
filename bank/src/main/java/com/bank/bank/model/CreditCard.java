@@ -15,7 +15,7 @@ public class CreditCard {
     private Integer cvv;
     @Column(name = "user_id")
     private Integer userId;  // kart sahibi
-    @Column(name = "balance", scale=2)
+    @Column(name = "balance", scale = 2)
     //@Column(name = "balance")
     private long balance; //bakiye
 

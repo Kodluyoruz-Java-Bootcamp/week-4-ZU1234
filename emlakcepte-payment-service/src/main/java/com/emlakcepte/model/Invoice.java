@@ -1,36 +1,54 @@
 package com.emlakcepte.model;
 
-
 import com.emlakcepte.enums.ProductType;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "invoices")
 public class Invoice {
-    private Integer userId;
-    private Integer price;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private int id;
+    @Column(name = "user_id")
+    private int userId;  // kart sahibi
+    @Column(name = "price")
+    private int price;
+    @Column(name = "product")
+    //TODO product düzenle
     private ProductType productType;
-
-    public Invoice() {
+    public Invoice(){
         super();
     }
-
-    public Invoice(Integer userId, Integer price,ProductType productType) {
+    public Invoice(int id, int userId, int price, ProductType productType) {
+        this.id = id;
         this.userId = userId;
         this.price = price;
         this.productType = productType;
     }
 
-    public Integer getUserId() {
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

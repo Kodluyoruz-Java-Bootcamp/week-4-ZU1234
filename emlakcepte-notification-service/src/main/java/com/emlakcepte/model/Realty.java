@@ -1,8 +1,8 @@
 package com.emlakcepte.model;
 
 import com.emlakcepte.enums.RealtyType;
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,7 +29,7 @@ public class Realty {
         super();
     }
 
-    public Realty(Integer no, String title, LocalDateTime createDate,Integer userId, RealtyType status, String province) {
+    public Realty(Integer no, String title, LocalDateTime createDate, Integer userId, RealtyType status, String province) {
         super();
         this.no = no;
         this.title = title;

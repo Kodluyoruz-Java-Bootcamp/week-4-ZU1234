@@ -3,7 +3,7 @@ package com.emlakcepte.request;
 import com.emlakcepte.enums.RealtyType;
 
 public class RealtyStatusUpdateRequest {
-    private  Integer id;
+    private Integer id;
     private RealtyType status;
 
     public RealtyStatusUpdateRequest(Integer id, RealtyType status) {

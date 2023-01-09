@@ -15,8 +15,8 @@ import java.time.LocalDate;
 
 @Component
 public class PaymentService {
-    private final int REALTY_PACKAGE_PIECE=10;
-    private final int ONE_PACKAGE_VALUE_BY_MONTH=1;
+    private final int REALTY_PACKAGE_PIECE = 10;
+    private final int ONE_PACKAGE_VALUE_BY_MONTH = 1;
     @Autowired
     private BankServiceClient bankServiceClient;
 
@@ -29,14 +29,11 @@ public class PaymentService {
     public Invoice payment(PaymentRequest paymentRequest) {
 
         if (bankServiceClient.isPayment(paymentRequest)) {
-
-            rabbitTemplate.convertAndSend(emlakcepteUsersAndProductsQueue.getQueueName(),convert(paymentRequest));
-            System.out.println(convert(paymentRequest).toString());
+            rabbitTemplate.convertAndSend(emlakcepteUsersAndProductsQueue.getQueueName(), convertRealtyProduct(paymentRequest));
             return convertInvoice(paymentRequest);
         }
         return null;
     }
-
 
 
     public Invoice convertInvoice(PaymentRequest paymentRequest) {
@@ -46,17 +43,20 @@ public class PaymentService {
         response.setUserId(paymentRequest.getUserId());
         return response;
     }
-    public RealtyProduct convert(PaymentRequest paymentRequest) {
-        RealtyProduct response=new RealtyProduct();
+
+    public RealtyProduct convertRealtyProduct(PaymentRequest paymentRequest) {
+        RealtyProduct response = new RealtyProduct();
         response.setUserId(paymentRequest.getUserId());
         response.setProductType(paymentRequest.getProductType());
 
-        LocalDate localDate=LocalDate.now();
-        int month = localDate.getMonthValue()+REALTY_PACKAGE_PIECE*ONE_PACKAGE_VALUE_BY_MONTH;
-        int day =localDate.getDayOfMonth();
-        int year =localDate.getYear();
+        LocalDate localDate = LocalDate.now();
+        int month = localDate.getMonthValue() + REALTY_PACKAGE_PIECE * ONE_PACKAGE_VALUE_BY_MONTH;
+        int day = localDate.getDayOfMonth();
+        int year = localDate.getYear();
 
-        response.setPackageEndDate(day+"."+month+"."+year);
-    return response;
+        response.setPackageEndDate(day + "." + month + "." + year);
+
+
+        return response;
     }
 }

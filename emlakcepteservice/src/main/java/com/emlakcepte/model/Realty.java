@@ -1,107 +1,108 @@
 package com.emlakcepte.model;
 
 import com.emlakcepte.enums.RealtyType;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
 @Entity
-@Table(name="realtyes")
+@Table(name = "realtyes")
 public class Realty {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private Integer id;
-	@Column(name = "realty_no",nullable = false)
-	private Integer no;
-	@Column(name = "title",nullable = false,length = 200)
-	private String title;
-	@Column(name = "create_Date ")
-	private LocalDateTime createDate;
-	@ManyToOne
-	private User user;
-	@Column(name = "status")
-	@Enumerated(EnumType.STRING)
-	private RealtyType status;
-	@Column(name = "province")
-	private String province;
-	
-	public Realty() {
-		super();
-	}
-	
-	public Realty(Integer no, String title, LocalDateTime createDate/*, User user*/, RealtyType status,String province) {
-		super();
-		this.no = no;
-		this.title = title;
-		this.createDate =createDate;
-		//this.user = user;
-		this.status = status;
-		this.province=province;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
+    @Column(name = "realty_no", nullable = false)
+    private Integer no;
+    @Column(name = "title", nullable = false, length = 200)
+    private String title;
+    @Column(name = "create_Date ")
+    private LocalDateTime createDate;
+    @ManyToOne
+    private User user;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private RealtyType status;
+    @Column(name = "province")
+    private String province;
 
-	public Integer getId() {
-		return id;
-	}
+    public Realty() {
+        super();
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Realty(Integer no, String title, LocalDateTime createDate, RealtyType status, String province) {
+        super();
+        this.no = no;
+        this.title = title;
+        this.createDate = createDate;
+        this.status = status;
+        this.province = province;
+    }
 
-	public Integer getNo() {
-		return no;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public void setNo(Integer no) {
-		this.no = no;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public Integer getNo() {
+        return no;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setNo(Integer no) {
+        this.no = no;
+    }
 
-	public LocalDateTime getCreateDate() {
-		return createDate;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setCreateDate(LocalDateTime createDate) {
-		this.createDate = createDate;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public RealtyType getStatus() {
-		return status;
-	}
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
 
-	public void setStatus(RealtyType status) {
-		this.status = status;
-	}
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
 
-	public String getProvince() {
-		return province;
-	}
+    public RealtyType getStatus() {
+        return status;
+    }
 
-	public void setProvince(String province) {
-		this.province = province;
-	}
+    public void setStatus(RealtyType status) {
+        this.status = status;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public String getProvince() {
+        return province;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setProvince(String province) {
+        this.province = province;
+    }
 
-	@Override
-	public String toString() {
-		return "Realty{" +
-				"id=" + id +
-				", no=" + no +
-				", title='" + title + '\'' +
-				", createDate=" + createDate +
-				", status=" + status +
-				", province='" + province + '\'' +
-				'}';
-	}
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Realty{" +
+                "id=" + id +
+                ", no=" + no +
+                ", title='" + title + '\'' +
+                ", createDate=" + createDate +
+                ", status=" + status +
+                ", province='" + province + '\'' +
+                '}';
+    }
 }

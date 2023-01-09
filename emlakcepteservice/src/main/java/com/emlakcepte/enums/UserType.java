@@ -1,7 +1,11 @@
 package com.emlakcepte.enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum UserType {
-	
-	INDIVIDUAL, CORPARETE
+	@JsonProperty("INDIVIDUAL")
+    INDIVIDUAL,
+	@JsonProperty("CORPARETE")
+	CORPARETE
 
 }

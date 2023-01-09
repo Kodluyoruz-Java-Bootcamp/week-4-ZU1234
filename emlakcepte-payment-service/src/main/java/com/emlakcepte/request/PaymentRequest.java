@@ -62,4 +62,15 @@ public class PaymentRequest {
     public void setProductType(ProductType productType) {
         this.productType = productType;
     }
+
+    @Override
+    public String toString() {
+        return "PaymentRequest{" +
+                "cardNo='" + cardNo + '\'' +
+                ", userId=" + userId +
+                ", cvv=" + cvv +
+                ", price=" + price +
+                ", productType=" + productType +
+                '}';
+    }
 }

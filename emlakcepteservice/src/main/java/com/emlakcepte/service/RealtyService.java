@@ -9,6 +9,7 @@ import com.emlakcepte.dao.UsersAndProductsRepository;
 import com.emlakcepte.enums.ProductType;
 import com.emlakcepte.enums.RealtyType;
 import com.emlakcepte.enums.UserType;
+import com.emlakcepte.model.ProductAndUserId;
 import com.emlakcepte.model.Realty;
 import com.emlakcepte.model.RealtyProduct;
 import com.emlakcepte.model.User;
@@ -60,10 +61,6 @@ public class RealtyService {
             return null;
         }
 
-
-
-        //foundUser.get().getType().equals(UserType.INDIVIDUAL) bu kullanımda foundUser null ise  null pointer exception
-        // (NPE) hatası verebilir.
         if (UserType.INDIVIDUAL.equals(foundUser.get().getType())) {
             List<Realty> realtyList = realtyRepository.findAllByUserId(foundUser.get().getId());
             if (realtyList.size() == MAX_INDIVIDUAL_REALTY_SIZE) {
@@ -82,31 +79,34 @@ public class RealtyService {
 
         //kullanıcı paket satın aldıysa ve ilan yayınlayabilir.
         //Todo son kullanma tarihini dikkate al
-       RealtyProduct  realtyProduct= usersAndProductsRepository.findAllByUserId(realtyRequest.getUserId()).stream()
-               .filter(obj->obj.getProductType().equals(ProductType.REALTY_CREATE))
-               .findAny().orElse(null);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        RealtyProduct realtyProduct = usersAndProductsRepository.findById(new ProductAndUserId(realtyRequest.getUserId(),
+                ProductType.REALTY_CREATE)).orElse(null);
 
-        if(realtyProduct!=null){
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        //kullanıcının ilan yayınlamak için istenilen paketi mevcutmu diye kontrol edilir.
+        if (realtyProduct != null) {
+
 
             Date recordDate;
-            Date now ;
+            Date now;
+            LocalDate localDate = LocalDate.now();
             try {
 
                 recordDate = simpleDateFormat.parse(String.valueOf(realtyProduct.getPackageEndDate()));
 
-                LocalDate localDate=LocalDate.now();
-                int month = localDate.getMonthValue();
-                int day =localDate.getDayOfMonth();
-                int year =localDate.getYear();
 
-                now=simpleDateFormat.parse(day+"."+month+"."+year);
+                int month = localDate.getMonthValue();
+                int day = localDate.getDayOfMonth();
+                int year = localDate.getYear();
+
+                now = simpleDateFormat.parse(day + "." + month + "." + year);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-
-            if(now.getTime()<recordDate.getTime()){
+            //Paket bitiş süresi kontrol edilir. eğer paketin süresi dolmadıysa ilan yayınlanır.
+            if (now.getTime() < recordDate.getTime()) {
                 realtyRepository.save(realty);
 
                 System.out.println("createRealty :: " + realty);
@@ -150,6 +150,7 @@ public class RealtyService {
                 .filter(realty -> realty.getId().equals(id))
                 .toList();
     }
+
     //İlanın durumuna göre ilanları listeler.(örn: active,passive...)
     public List<RealtyResponse> getAllByStatus(RealtyType realtyType) {
         return getAll().stream()
@@ -167,9 +168,7 @@ public class RealtyService {
                 .findAny().orElse(null);
     }
 
-
-    //ilan silme işlemi yapar database üzerindende siler.
-    //TODO orelse(null) kontrol et
+    //ilan no ya göre ilan silme işlemi yapar.
     public RealtyResponse deleteRealtyByNo(int id) {
         RealtyResponse selectRealty = findById(id);
         if (selectRealty != null) {
@@ -178,7 +177,7 @@ public class RealtyService {
         return selectRealty;
     }
 
-    //TODO orelse(null) kontrol et
+    //ilan güncelleme işlemi yapar
     public RealtyResponse updateRealty(RealtyRequest realtyRequest) {
         Realty selectRealty = findByNo(realtyRequest.getNo());
 
@@ -197,41 +196,20 @@ public class RealtyService {
 
     //Ilan durumunu aktif yada pasif hale getirilmesi için kuyruğa atar.
     public boolean updateRealtyStatus(RealtyStatusUpdateRequest realtyStatusUpdateRequest) {
-        Logger logger=Logger.getLogger(RealtyService.class.getName());
-        if(!RealtyType.IN_REVIEW.equals(realtyStatusUpdateRequest.getStatus())) {
+        Logger logger = Logger.getLogger(RealtyService.class.getName());
+        if (!RealtyType.IN_REVIEW.equals(realtyStatusUpdateRequest.getStatus())) {
             rabbitTemplate.convertAndSend(emlakcepteRealtyQueue.getQueueName(), realtyStatusUpdateRequest);
-             logger.log(Level.INFO,"[emlakcepteRealtyQueue] - status update: {0}",
+            logger.log(Level.INFO, "[emlakcepteRealtyQueue] - status update: {0}",
                     realtyStatusUpdateRequest.getStatus());
-             return true;
+            return true;
         }
 
-        logger.log(Level.WARNING,"[emlakcepteRealtyQueue] - It is added to the queue only in the case of " +
+        logger.log(Level.WARNING, "[emlakcepteRealtyQueue] - It is added to the queue only in the case of " +
                         "\"active\" and \"passive\".: {0}",
                 realtyStatusUpdateRequest.getStatus());
         converter.convert(realtyRepository.findById(realtyStatusUpdateRequest.getId()).get());
         return false;
     }
 
-
-
-  /*  public List<RealtyResponse> getAllActiveRealtyesByUser(int userId) {
-
-    }*/
-
-
-    /*public List<Realty> getAllByUserName(User user) {
-        return getAll().stream()
-                .filter(realty -> realty.getUser().getMail().equals(user.getMail()))
-                .toList();
-    }**/
-
-   /* public List<Realty> getActiveRealtyByUserName(User user) {
-
-        return getAll().stream()
-                .filter(realty -> realty.getUser().getName().equals(user.getName()))
-                .filter(realty -> RealtyType.ACTIVE.equals(realty.getStatus()))
-                .toList();
-
-    }**/
 
 }

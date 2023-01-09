@@ -18,7 +18,7 @@ public class Invoice {
     @Column(name = "price")
     private Integer price;
     @Column(name = "productType")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private ProductType productType;
     @Column(name = "product_piece")
     private Integer piece;

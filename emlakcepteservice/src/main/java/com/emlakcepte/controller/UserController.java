@@ -2,12 +2,15 @@ package com.emlakcepte.controller;
 
 import com.emlakcepte.converter.UserConverter;
 import com.emlakcepte.model.Invoice;
+import com.emlakcepte.model.ProductAndUserId;
+import com.emlakcepte.model.RealtyProduct;
 import com.emlakcepte.request.PaymentRequest;
 import com.emlakcepte.request.UserRequest;
 import com.emlakcepte.response.PaymentResponse;
 import com.emlakcepte.response.UserResponse;
 import com.emlakcepte.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +25,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserConverter converter;
-
-
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAll() {
@@ -44,10 +45,17 @@ public class UserController {
     public ResponseEntity<UserResponse> getByEmail(@PathVariable String email) {
         return ResponseEntity.ok(userService.getByEmail(email));
     }
+    //kullanıcı paket alımı ve ödeme işlemi yapar.
     @PostMapping(value = "/payment")
     public ResponseEntity<PaymentResponse> payment(@RequestBody PaymentRequest paymentRequest){
         userService.payment(paymentRequest);
         return ResponseEntity.ok(converter.convert(paymentRequest));
+    }
+    //Kullanıcının sahip olduğu paketler listelenir.
+    @GetMapping(value = "/product")
+    public ResponseEntity<List<RealtyProduct>> getProductByUser(@RequestBody ProductAndUserId productAndUserId){
+
+        return ResponseEntity.ok(userService.getProductByUser(productAndUserId));
     }
 
 

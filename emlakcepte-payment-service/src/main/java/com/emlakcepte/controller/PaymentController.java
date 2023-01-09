@@ -17,8 +17,8 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<Invoice> payment(@RequestBody PaymentRequest paymentRequest) {
-        return ResponseEntity.ok(paymentService.payment(paymentRequest));
+    public Invoice payment(@RequestBody PaymentRequest paymentRequest) {
+        return paymentService.payment(paymentRequest);
     }
 
 }
