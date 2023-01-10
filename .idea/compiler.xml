@@ -11,8 +11,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="emlakcepte-banner-service" target="17" />
-      <module name="emlakcepteservice" target="17" />
+      <module name="emlakcepte-banner-service" target="1.5" />
+      <module name="emlakcepteservice" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
